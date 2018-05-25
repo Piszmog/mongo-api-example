@@ -15,7 +15,7 @@ Inspired by [Restful API in Go with Mongodb](http://www.blog.labouardy.com/build
 Using [dep](https://github.com/golang/dep) for version control ([vgo](https://github.com/golang/go/wiki/vgo) has since been chosen for official version control).
 
 ## Cloud Ready
-As port of this Go example, I wanted to see what the effort would be to deploy to Cloud Foundry, specifically [Pivotal Cloud Foundry](https://run.pivotal.io/).
+As part of this Go example, I wanted to see what the effort would be to deploy to Cloud Foundry, specifically [Pivotal Cloud Foundry](https://run.pivotal.io/).
 
 ### Manifest YAML
 The manifest file is required for pushing the application to Cloud Foundry.
