@@ -9,3 +9,14 @@ type Movie struct {
 type ResponseId struct {
     Id string `json:"id"`
 }
+
+type CFEnv struct {
+    Mlab []MLab `json:"mlab"`
+}
+type MLab struct {
+    Credentials      Credentials `json:"credentials"`
+
+}
+type Credentials struct {
+    Uri string `json:"uri"`
+}

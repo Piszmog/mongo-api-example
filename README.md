@@ -4,8 +4,6 @@ Inspired by [Restful API in Go with Mongodb](http://www.blog.labouardy.com/build
 I wanted to start learning Go and how to use it. I was also interested in seeing how to make it cloud ready.
 
 ## Packages
-* `github.com/BurntSushit/toml`
-  * Reader for TOML file (may remove later)
 * `github.com/globalsign/mgo`
   * Community supported MongoDB driver
 * `github.com/goolge/uuid`
@@ -40,5 +38,4 @@ Cloud Foundry will build the application and run it.
 ## Local running
 Simply run the `main()` function. 
 
-Ensure to have a local instance of Mongodb running. The `config.toml` file determines the application to connect to the local DB 
-(as I clean up the code, I will likey remove this to be 12 Factor compliant).
+Ensure to have a local instance of Mongodb running. By default it will try to connect to `localhost` server and `test` database.

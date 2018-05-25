@@ -9,23 +9,22 @@ import (
     "encoding/json"
     "github.com/google/uuid"
     "github.com/Piszmog/mongo-api-example/db"
-    "github.com/Piszmog/mongo-api-example/config"
     "os"
 )
 
 const (
-    Id         = "id"
     CfServices = "VCAP_SERVICES"
+    DefaultDatabase = "test"
+    DefaultServer = "localhost"
+    Id         = "id"
 )
 
 var dbConnection db.DBConnection
 
 func init() {
-    var configReader config.Config
     cfServices := os.Getenv(CfServices)
     if len(cfServices) == 0 {
-        configReader.Read()
-        dbConnection.Connect(configReader.Server, configReader.Database)
+        dbConnection.Connect(DefaultServer, DefaultDatabase)
     } else {
         var env model.CFEnv
         err := json.Unmarshal([]byte(cfServices), &env)

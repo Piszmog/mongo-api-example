@@ -2,12 +2,6 @@
 
 
 [[projects]]
-  name = "github.com/BurntSushi/toml"
-  packages = ["."]
-  revision = "b26d9c308763d68093482582cea63d69be07a0f0"
-  version = "v0.3.0"
-
-[[projects]]
   branch = "master"
   name = "github.com/globalsign/mgo"
   packages = [
@@ -34,6 +28,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "67bfdd1e2d055f25525594ca217b485214014d0b0a2d7a34284b7d529378e911"
+  inputs-digest = "53602bdab6f612f47eb86d7e5e3095e95c0294a4836aa23fb88586d60d57263b"
   solver-name = "gps-cdcl"
   solver-version = 1
