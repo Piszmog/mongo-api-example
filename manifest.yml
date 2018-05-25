@@ -1,0 +1,10 @@
+---
+applications:
+  - name: mongo-api-demo
+    buildpack: go_buildpack
+    memory: 5M
+    instances: 1
+    env:
+      GOPACKAGENAME: github.com/Piszmog/mongo-api-example
+    services:
+     - mongo
