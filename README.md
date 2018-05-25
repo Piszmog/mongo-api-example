@@ -1,6 +1,8 @@
 # Mongo API Example
 Inspired by [Restful API in Go with Mongodb](http://www.blog.labouardy.com/build-restful-api-in-go-and-mongodb/).
 
+I wanted to start learning Go and how to use it. I was also interested in seeing how to make it cloud ready.
+
 ## Packages
 * `github.com/BurntSushit/toml`
   * Reader for TOML file (may remove later)
