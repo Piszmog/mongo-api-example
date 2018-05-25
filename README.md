@@ -10,6 +10,8 @@ I wanted to start learning Go and how to use it. I was also interested in seeing
   * Generates UUIDs
 * `github.com/julienschmidt/httprouter`
   * The HTTP router to create endpoints
+* `go.uber.org/zap`
+  * The logging framework
 
 ## Version Control
 Using [dep](https://github.com/golang/dep) for version control ([vgo](https://github.com/golang/go/wiki/vgo) has since been chosen for official version control).

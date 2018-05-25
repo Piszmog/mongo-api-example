@@ -42,5 +42,5 @@
   version = "0.2.0"
 
 [[constraint]]
-  name = "github.com/BurntSushi/toml"
-  version = "0.3.0"
+  name = "go.uber.org/zap"
+  version = "1.8.0"
