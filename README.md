@@ -12,7 +12,7 @@ Inspired by [Restful API in Go with Mongodb](http://www.blog.labouardy.com/build
   * The HTTP router to create endpoints
 
 ## Version Control
-Using [dep](https://github.com/golang/dep) for version control ([vgo](https://github.com/golang/go/wiki/vgo)) has since been chosen for official version control.
+Using [dep](https://github.com/golang/dep) for version control ([vgo](https://github.com/golang/go/wiki/vgo) has since been chosen for official version control).
 
 ## Cloud Ready
 As port of this Go example, I wanted to see what the effort would be to deploy to Cloud Foundry, specifically [Pivotal Cloud Foundry](https://run.pivotal.io/).
