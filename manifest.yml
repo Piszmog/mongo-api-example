@@ -6,5 +6,6 @@ applications:
     instances: 1
     env:
       GOPACKAGENAME: github.com/Piszmog/mongo-api-example
+      GOVERSION: go1.10
     services:
      - mongo
