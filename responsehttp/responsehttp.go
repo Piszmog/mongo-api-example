@@ -4,7 +4,7 @@ import (
     "net/http"
     "encoding/json"
     "go.uber.org/zap"
-    "log"
+    "github.com/Piszmog/mongo-api-example/util"
 )
 
 const (
@@ -14,15 +14,14 @@ const (
 
 var logger zap.SugaredLogger
 
+// Create the logger for the package
 func init() {
-    log1, err := zap.NewProduction()
-    if err != nil {
-        log.Fatalf("failed to create zap logger, %v", err)
-    }
-    defer log1.Sync()
-    logger = *log1.Sugar()
+    zapLogger := util.CreateLogger()
+    defer zapLogger.Sync()
+    logger = *zapLogger.Sugar()
 }
 
+// Writes an OK (200) response to the client
 func WriteOkResponse(writer http.ResponseWriter, payload interface{}) {
     bytes, err := json.Marshal(payload)
     if err != nil {
@@ -31,6 +30,7 @@ func WriteOkResponse(writer http.ResponseWriter, payload interface{}) {
     WriteResponse(writer, http.StatusOK, bytes)
 }
 
+// Writes a response to the client with the provided status and body
 func WriteResponse(writer http.ResponseWriter, httpStatus int, bytes []byte) {
     writer.Header().Set(KeyContentType, ValueApplicationJson)
     writer.WriteHeader(httpStatus)

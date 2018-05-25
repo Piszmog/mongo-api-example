@@ -13,6 +13,8 @@ const (
     DefaultPort = "8080"
 )
 
+// Retrieves the port to run the application on from the "PORT" environment variables. If environment variable is not provided
+// it uses the default port "8080"
 func getPort() string {
     var port string
     if port = os.Getenv(Port); len(port) == 0 {
@@ -21,6 +23,7 @@ func getPort() string {
     return port
 }
 
+// Runs the application
 func main() {
     port := getPort()
     router := httprouter.New()

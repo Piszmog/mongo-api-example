@@ -10,7 +10,7 @@ import (
     "github.com/Piszmog/mongo-api-example/db"
     "os"
     "go.uber.org/zap"
-    "log"
+    "github.com/Piszmog/mongo-api-example/util"
 )
 
 const (
@@ -23,18 +23,22 @@ const (
 var dbConnection db.Connection
 var logger zap.SugaredLogger
 
+// Creates the logger and creates the connection to the DB
 func init() {
-    log1, err := zap.NewProduction()
-    if err != nil {
-        log.Fatalf("failed to create zap logger, %v", err)
-    }
-    defer log1.Sync()
-    logger = *log1.Sugar()
+    zapLogger := util.CreateLogger()
+    defer zapLogger.Sync()
+    logger = *zapLogger.Sugar()
+    connectToDB()
+}
+
+// Connects to the db. If "VCAP_SERVICES" is not an environment variable, it connects to the default server name "localhost"
+// and the default database "test"
+func connectToDB() {
     cfServices := os.Getenv(CfServices)
     if len(cfServices) == 0 {
         dbConnection.Connect(DefaultServer, DefaultDatabase)
     } else {
-        var env model.CFEnv
+        var env model.CloudFoundryEnvironment
         err := json.Unmarshal([]byte(cfServices), &env)
         if err != nil {
             logger.Fatal("failed to convert env map", err)
@@ -43,6 +47,7 @@ func init() {
     }
 }
 
+// Sets up the http routes
 func SetupMovieRoutes(router *httprouter.Router) {
     router.GET("/movies", GetAllMovies)
     router.GET("/movies/:id", FindMovie)
@@ -51,6 +56,7 @@ func SetupMovieRoutes(router *httprouter.Router) {
     router.DELETE("/movies/:id", DeleteMovie)
 }
 
+// Retrieves all the movies from the DB
 func GetAllMovies(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
     movies, err := dbConnection.FindAll()
     if err != nil {
@@ -61,6 +67,7 @@ func GetAllMovies(writer http.ResponseWriter, request *http.Request, params http
     responsehttp.WriteOkResponse(writer, movies)
 }
 
+// Finds the movie matching the provided id
 func FindMovie(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
     movie, err := dbConnection.FindById(params.ByName(Id))
     if err != nil {
@@ -71,6 +78,7 @@ func FindMovie(writer http.ResponseWriter, request *http.Request, params httprou
     responsehttp.WriteOkResponse(writer, movie)
 }
 
+// Creates the movie provided by the request body
 func CreateMovie(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
     defer request.Body.Close()
     var movie model.Movie
@@ -88,6 +96,7 @@ func CreateMovie(writer http.ResponseWriter, request *http.Request, params httpr
     responsehttp.WriteOkResponse(writer, model.ResponseId{Id: movie.Id})
 }
 
+// Updates the movie matching the provided id with the provided body
 func UpdateMovie(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
     defer request.Body.Close()
     movieId := params.ByName(Id)
@@ -100,19 +109,20 @@ func UpdateMovie(writer http.ResponseWriter, request *http.Request, params httpr
     movie.Id = movieId
     err := dbConnection.Update(movieId, movie)
     if err != nil {
-        logger.Errorf("failed to update movie %v, %v", movieId, err)
-        responsehttp.WriteResponse(writer, http.StatusInternalServerError, nil)
+        logger.Warnf("failed to update movie %v, %v", movieId, err)
+        responsehttp.WriteResponse(writer, http.StatusNotFound, nil)
         return
     }
     writer.WriteHeader(http.StatusOK)
 }
 
+// Deletes the movie matching the provided id
 func DeleteMovie(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
     movieId := params.ByName(Id)
     err := dbConnection.Delete(movieId)
     if err != nil {
-        logger.Errorf("failed to delete movie %v, %v", movieId, err)
-        responsehttp.WriteResponse(writer, http.StatusInternalServerError, nil)
+        logger.Warnf("failed to delete movie %v, %v", movieId, err)
+        responsehttp.WriteResponse(writer, http.StatusNotFound, nil)
         return
     }
     responsehttp.WriteResponse(writer, http.StatusOK, nil)

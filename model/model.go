@@ -10,7 +10,7 @@ type ResponseId struct {
     Id string `json:"id"`
 }
 
-type CFEnv struct {
+type CloudFoundryEnvironment struct {
     Mlab []MLab `json:"mlab"`
 }
 type MLab struct {
