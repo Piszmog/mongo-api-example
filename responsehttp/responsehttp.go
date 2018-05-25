@@ -26,7 +26,7 @@ func init() {
 func WriteOkResponse(writer http.ResponseWriter, payload interface{}) {
     bytes, err := json.Marshal(payload)
     if err != nil {
-        logger.Errorf("failed to marshal %v\n", payload)
+        logger.Errorf("failed to marshal %v", payload)
     }
     WriteResponse(writer, http.StatusOK, bytes)
 }

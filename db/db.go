@@ -60,7 +60,11 @@ func (m *Connection) FindAll() ([]model.Movie, error) {
 
 func (m *Connection) FindById(id string) (model.Movie, error) {
     var movie model.Movie
-    err := m.db.C(COLLECTION).FindId(id).One(&movie)
+    query := m.db.C(COLLECTION).FindId(id)
+    if query == nil {
+        return movie, nil
+    }
+    err := query.One(&movie)
     return movie, err
 }
 

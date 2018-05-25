@@ -54,7 +54,7 @@ func SetupMovieRoutes(router *httprouter.Router) {
 func GetAllMovies(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
     movies, err := dbConnection.FindAll()
     if err != nil {
-        logger.Error(err)
+        logger.Errorf("failed to get all movies, %v", err)
         responsehttp.WriteResponse(writer, http.StatusInternalServerError, nil)
         return
     }
@@ -64,8 +64,8 @@ func GetAllMovies(writer http.ResponseWriter, request *http.Request, params http
 func FindMovie(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
     movie, err := dbConnection.FindById(params.ByName(Id))
     if err != nil {
-        logger.Errorf("failed to find movie, %v\n", err)
-        responsehttp.WriteResponse(writer, http.StatusInternalServerError, nil)
+        logger.Warnf("failed to find movie, %v", err)
+        responsehttp.WriteResponse(writer, http.StatusNotFound, nil)
         return
     }
     responsehttp.WriteOkResponse(writer, movie)
@@ -75,13 +75,13 @@ func CreateMovie(writer http.ResponseWriter, request *http.Request, params httpr
     defer request.Body.Close()
     var movie model.Movie
     if err := json.NewDecoder(request.Body).Decode(&movie); err != nil {
-        logger.Errorf("failed to decode request body, %v\n", err)
+        logger.Errorf("failed to decode request body, %v", err)
         responsehttp.WriteResponse(writer, http.StatusInternalServerError, nil)
         return
     }
     movie.Id = uuid.New().String()
     if err := dbConnection.Insert(movie); err != nil {
-        logger.Errorf("failed to create movie, %v\n", err)
+        logger.Errorf("failed to create movie, %v", err)
         responsehttp.WriteResponse(writer, http.StatusInternalServerError, nil)
         return
     }
@@ -93,14 +93,14 @@ func UpdateMovie(writer http.ResponseWriter, request *http.Request, params httpr
     movieId := params.ByName(Id)
     var movie model.Movie
     if err := json.NewDecoder(request.Body).Decode(&movie); err != nil {
-        logger.Errorf("failed to decode request body %v, %v\n", movieId, err)
+        logger.Errorf("failed to decode request body %v, %v", movieId, err)
         responsehttp.WriteResponse(writer, http.StatusInternalServerError, nil)
         return
     }
     movie.Id = movieId
     err := dbConnection.Update(movieId, movie)
     if err != nil {
-        logger.Errorf("failed to update movie %v, %v\n", movieId, err)
+        logger.Errorf("failed to update movie %v, %v", movieId, err)
         responsehttp.WriteResponse(writer, http.StatusInternalServerError, nil)
         return
     }
@@ -111,7 +111,7 @@ func DeleteMovie(writer http.ResponseWriter, request *http.Request, params httpr
     movieId := params.ByName(Id)
     err := dbConnection.Delete(movieId)
     if err != nil {
-        logger.Errorf("failed to delete movie %v, %v\n", movieId, err)
+        logger.Errorf("failed to delete movie %v, %v", movieId, err)
         responsehttp.WriteResponse(writer, http.StatusInternalServerError, nil)
         return
     }
