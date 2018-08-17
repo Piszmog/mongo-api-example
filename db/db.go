@@ -12,7 +12,6 @@ type Connection struct {
     Server     string
     Database   string
     db         *mgo.Database
-    collection mgo.Collection
 }
 
 const (
@@ -37,7 +36,6 @@ func (m *Connection) Connect(server string, database string) {
     m.Server = server
     m.Database = database
     m.db = session.DB(m.Database)
-    m.collection = *m.db.C(COLLECTION)
 }
 
 // Connect to the Mongodb Database using a URI connection string
@@ -52,20 +50,23 @@ func (m *Connection) ConnectWithURL(url string) {
     }
     m.Database = info.Database
     m.db = session.DB(m.Database)
-    m.collection = *m.db.C(COLLECTION)
 }
 
 // Finds all movies
 func (m *Connection) FindAll() ([]model.Movie, error) {
     var movies []model.Movie
-    err := m.collection.Find(bson.M{}).All(&movies)
+    session := m.db.Session.Copy()
+    defer session.Close()
+    err := session.DB(m.Database).C(COLLECTION).Find(bson.M{}).All(&movies)
     return movies, err
 }
 
 // Finds the movie matching the provided id
 func (m *Connection) FindById(id string) (model.Movie, error) {
     var movie model.Movie
-    query := m.collection.FindId(id)
+    session := m.db.Session.Copy()
+    defer session.Close()
+    query := session.DB(m.Database).C(COLLECTION).FindId(id)
     if query == nil {
         return movie, nil
     }
@@ -75,18 +76,24 @@ func (m *Connection) FindById(id string) (model.Movie, error) {
 
 // Inserts the provided movie
 func (m *Connection) Insert(movie model.Movie) error {
-    err := m.collection.Insert(&movie)
+    session := m.db.Session.Copy()
+    defer session.Close()
+    err := session.DB(m.Database).C(COLLECTION).Insert(&movie)
     return err
 }
 
 // Delete the movie matching the id
 func (m *Connection) Delete(id string) error {
-    err := m.collection.RemoveId(id)
+    session := m.db.Session.Copy()
+    defer session.Close()
+    err := session.DB(m.Database).C(COLLECTION).RemoveId(id)
     return err
 }
 
 // Updates the movie matching the id with the provided body
 func (m *Connection) Update(id string, movie model.Movie) error {
-    err := m.collection.UpdateId(id, &movie)
+    session := m.db.Session.Copy()
+    defer session.Close()
+    err := session.DB(m.Database).C(COLLECTION).UpdateId(id, &movie)
     return err
 }
